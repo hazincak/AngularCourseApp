@@ -6,6 +6,12 @@
 <hr>
 <div class="row">
     <div class="col-md-12">
+      
+        <app-recipe-item  
+          *ngFor="let recipeEl of recipes" 
+          class="list-group" 
+          [recipe]="recipeEl"></app-recipe-item>
+      
         <!-- <div *ngFor="let recipe of recipes" class="card" style="width: 18rem;">
             <img class="card-img-top" src="{{recipe.imagePath}}" alt="Card image cap">
             <div class="card-body">
@@ -14,18 +20,8 @@
               <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
           </div> -->
-          <div *ngFor="let recipe of recipes" class="list-group" >
-            <div class="list-group-item">
-              <div class="float-left">
-                <h5 class="text-primary">{{recipe.name}}</h5>
-                {{recipe.description}}
-              </div>
-              <div class="float-right ml-2">
-                <img class="img-fluid" style="max-height: 50px"   src="{{recipe.imagePath}}" alt="">
-              </div> 
-            </div>
-          </div>
-        <app-recipe-item></app-recipe-item>
+          
+        <!-- <app-recipe-item></app-recipe-item> -->
     </div>
 </div>
 
