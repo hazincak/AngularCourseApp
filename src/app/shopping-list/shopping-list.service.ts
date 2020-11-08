@@ -21,4 +21,10 @@ export class ShoppingListService{
         this.ingredients.push(ingredient);
         this.ingredientsChanged.emit(this.ingredients.slice());
       }
+
+      addIngredients(ingredients: Ingredient[]){
+        //for loop would emit a lot of events -> better solution
+        this.ingredients.push(...ingredients);
+        this.ingredientsChanged.emit(this.ingredients.slice());
+      }
 }
