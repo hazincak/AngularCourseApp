@@ -1,6 +1,7 @@
 <a  
   style="cursor: pointer"
-  class="list-group-item" (click)="onSelected()">
+  [routerLink]="[index]"
+  class="list-group-item">
       <div class="float-left">
         <h5 class="text-primary">{{recipe.name}}</h5>
         {{recipe.description}}
