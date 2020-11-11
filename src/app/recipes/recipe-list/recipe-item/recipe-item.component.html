@@ -1,9 +1,10 @@
 <a  
   style="cursor: pointer"
   [routerLink]="[index]"
+  routerLinkActive = "active"
   class="list-group-item">
       <div class="float-left">
-        <h5 class="text-primary">{{recipe.name}}</h5>
+        <h5>{{recipe.name}}</h5>
         {{recipe.description}}
       </div>
       <div class="float-right ml-2">
