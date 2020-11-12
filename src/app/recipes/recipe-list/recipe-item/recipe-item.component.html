@@ -3,11 +3,14 @@
   [routerLink]="[index]"
   routerLinkActive = "active"
   class="list-group-item">
-      <div class="float-left">
+    <div class="d-flex justify-content-between">
+      <div class="p-2">
         <h5>{{recipe.name}}</h5>
         {{recipe.description}}
       </div>
-      <div class="float-right ml-2">
-        <img class="img-fluid" style="max-height: 50px"   src="{{recipe.imagePath}}" alt="">
+      <div class="p-2 align-self-center">
+        <img class="" style="max-height: 50px;"   src="{{recipe.imagePath}}" alt="">
       </div> 
+    </div>
+      
 </a>
