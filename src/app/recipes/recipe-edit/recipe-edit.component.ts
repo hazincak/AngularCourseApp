@@ -27,6 +27,11 @@ export class RecipeEditComponent implements OnInit {
     )
   }
 
+  onSubmit(){
+    console.log(this.recipeForm);
+  }
+
+
   private initForm(){
     let recipeName = '';
     let recipeImagePath ='';
@@ -42,9 +47,11 @@ export class RecipeEditComponent implements OnInit {
     this.recipeForm = new FormGroup({
       'name': new FormControl(recipeName),
       'imagePath': new FormControl(recipeImagePath),
-      'recipeDescription': new FormControl(recipeDescription),
+      'description': new FormControl(recipeDescription),
     })
   }
+
+
 
 
 }
