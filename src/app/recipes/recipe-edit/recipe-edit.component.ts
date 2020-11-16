@@ -57,6 +57,7 @@ export class RecipeEditComponent implements OnInit {
 
   onDeleteIngredient(index: number){
     (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
+    // (<FormArray>this.recipeForm.get('ingredients')).clear();
   }
 
   onCancel(){
@@ -89,7 +90,6 @@ export class RecipeEditComponent implements OnInit {
           );
         }
       }
-      console.log(recipe.ingredients)
     }
 
     this.recipeForm = new FormGroup({
