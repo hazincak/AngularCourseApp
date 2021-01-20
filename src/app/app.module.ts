@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core.module';
+import { LoggingService } from './logging.service';
 
 
 
@@ -24,7 +25,8 @@ import { CoreModule } from './core.module';
     CoreModule
   ],
   providers: [
-
+    LoggingService
+    //Think twice before providing service in any other module than the app.module or use @injectable({'root'}) , otherwise I can have multiple instances
   ],
   bootstrap: [AppComponent]
 })
