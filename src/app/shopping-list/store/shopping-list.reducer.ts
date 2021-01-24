@@ -11,13 +11,14 @@ const initialState = {
 };
 
 //state = initialState asigns default values to function arguments. IF the argument no set.
-export function shoppingListReducer(state = initialState, action: ShoppingListActions.AddIngredient){
+export function shoppingListReducer(state = initialState, action: ShoppingListActions.ShoppingListActions){
   switch (action.type){
     case ShoppingListActions.ADD_INGREDIENT:
       return {
         ...state,
         ingredients: [...state.ingredients, action.payload]
       };
+    case ShoppingListActions.ADD_INGREDIENTS:
       default:
         return state;
   }
