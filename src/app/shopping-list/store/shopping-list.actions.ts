@@ -5,6 +5,8 @@ export const ADD_INGREDIENT = 'ADD_INGREDIENT';
 export const ADD_INGREDIENTS = 'ADD_INGREDIENTS';
 export const UPDATE_INGREDIENT = 'UPDATE_INGREDIENT';
 export const DELETE_INGREDIENT = 'DELETE_INGREDIENT';
+export const START_EDIT = 'START_EDIT';
+export const STOP_EDIT = 'STOP_EDIT';
 
 export class AddIngredient implements Action{
   //readonly is a TS feature that indicates to TS that this must never be changed from outside
@@ -29,4 +31,19 @@ export class DeleteIngredient implements Action{
   constructor(public payload: number){}
 }
 
-export type ShoppingListActions = AddIngredient | AddIngredients | UpdateIngredient | DeleteIngredient;
+export class StartEdit implements Action {
+  readonly type = START_EDIT;
+  constructor(public payload: number){}
+}
+
+export class StopEdit implements Action {
+  readonly type = STOP_EDIT;
+}
+
+export type ShoppingListActions =
+  |  AddIngredient
+  |  AddIngredients
+  |  UpdateIngredient
+  |  DeleteIngredient
+  |  StartEdit
+  |  StopEdit;
