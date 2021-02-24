@@ -24,10 +24,11 @@ export interface AuthResponseData {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  user = new BehaviorSubject<User>(null);
+  // user = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
 
-  constructor(private http: HttpClient,
+  constructor(
+    private http: HttpClient,
     private router: Router,
     private store: Store<fromApp.AppState>
   ) { }
@@ -80,7 +81,7 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBMIiQDqqNxXMfHwy780VstgnWg7-ybAXs',
+    return this.http.post<AuthResponseData>('https://.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBMIiQDqqNxXMfHwy780VstgnWg7-ybAXs',
       {
         email: email,
         password: password,
