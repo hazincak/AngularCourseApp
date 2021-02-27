@@ -1,8 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { Actions, Effect, ofType } from "@ngrx/effects";
 import { of } from "rxjs";
-import { catchError, map, switchMap } from "rxjs/operators";
+import { catchError, map, switchMap, tap } from "rxjs/operators";
 import { environment } from '../../../environments/environment';
 
 import * as AuthActions from './auth.actions';
@@ -32,20 +33,43 @@ export class AuthEffects {
       ).pipe(
         map(resData => {
           const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 1000);
-          return of(
+
             new AuthActions.Login({
               email: resData.email,
               userId: resData.localId,
               token: resData.idToken,
               expirationDate: expirationDate
-            }));
+            });
         }),
-        catchError(error => {
-          return of();
+        catchError(errorRes => {
+          let errorMessage = 'An unknown error occured!';
+            if (!errorRes.error || !errorRes.error.error) {
+              return of (new AuthActions.LoginFail(errorMessage));
+            }
+            switch (errorRes.error.error.message) {
+              case 'EMAIL_EXISTS':
+                errorMessage = 'This email exists already';
+                break;
+              case 'INVALID_PASSWORD':
+                errorMessage = 'Invalid password';
+                break;
+              case 'EMAIL_NOT_FOUND':
+                errorMessage = 'This email is invalid';
+                break;
+            }
+            return of (new AuthActions.LoginFail(errorMessage));
         })
       );
     })
   );
 
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  //This effect doesn't dispatch new action
+  @Effect({dispatch: false})
+  authSuccess = this.actions$.pipe(
+    ofType(AuthActions.LOGIN),
+    tap(() => {
+      this.router.navigate(['/']);
+  }));
+
+  constructor(private actions$: Actions, private http: HttpClient, private router: Router) {}
 }
