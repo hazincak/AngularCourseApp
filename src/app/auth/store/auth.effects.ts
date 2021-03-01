@@ -18,36 +18,19 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
-@Injectable()
-export class AuthEffects {
-  @Effect()
-  authSignup = this.actions$.pipe(
-    ofType(AuthActions.SIGNUP_START)
-  );
+const handleAuthentication = (expiresIn: number, email: string, userId: string, token: string) => {
+  const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
 
-  @Effect()
-  authLogin = this.actions$.pipe(
-    ofType(AuthActions.LOGIN_START),
-    switchMap((authData: AuthActions.LoginStart) => {
-      return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBMIiQDqqNxXMfHwy780VstgnWg7-ybAXs',
-        {
-          email: authData.payload.email,
-          password: authData.payload.email,
-          returnSecureToken: true
-        }
-      ).pipe(
-        map(resData => {
-          const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 1000);
+  return new AuthActions.AuthenticateSuccess({
+    email: email,
+    userId: userId,
+    token: token,
+    expirationDate: expirationDate
+  });
+};
 
-            new AuthActions.AuthenticateSuccess({
-              email: resData.email,
-              userId: resData.localId,
-              token: resData.idToken,
-              expirationDate: expirationDate
-            });
-        }),
-        catchError(errorRes => {
-          let errorMessage = 'An unknown error occured!';
+const handleError = (errorRes: any) => {
+  let errorMessage = 'An unknown error occured!';
             if (!errorRes.error || !errorRes.error.error) {
               return of (new AuthActions.AuthenticateFail(errorMessage));
             }
@@ -63,6 +46,60 @@ export class AuthEffects {
                 break;
             }
             return of (new AuthActions.AuthenticateFail(errorMessage));
+};
+
+@Injectable()
+export class AuthEffects {
+  @Effect()
+  authSignup = this.actions$.pipe(
+    ofType(AuthActions.SIGNUP_START),
+    switchMap((signupAction: AuthActions.SignupStart) => {
+      return this.http.post<AuthResponseData>(
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBMIiQDqqNxXMfHwy780VstgnWg7-ybAXs`,
+        {
+          email: signupAction.payload.email,
+          password: signupAction.payload.password,
+          returnSecureToken: true
+
+        }
+      ).pipe(
+        map(resData => {
+          return handleAuthentication(
+            +resData.expiresIn,
+            resData.email,
+            resData.localId,
+            resData.idToken
+          );
+        }),
+        catchError(errorRes => {
+          return handleError(errorRes);
+        })
+      );
+    })
+  );
+
+
+  @Effect()
+  authLogin = this.actions$.pipe(
+    ofType(AuthActions.LOGIN_START),
+    switchMap((authData: AuthActions.LoginStart) => {
+      return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBMIiQDqqNxXMfHwy780VstgnWg7-ybAXs',
+        {
+          email: authData.payload.email,
+          password: authData.payload.password,
+          returnSecureToken: true
+        }
+      ).pipe(
+        map(resData => {
+          return handleAuthentication(
+            +resData.expiresIn,
+            resData.email,
+            resData.localId,
+            resData.idToken
+          );
+        }),
+        catchError(errorRes => {
+          return handleError(errorRes);
         })
       );
     })
