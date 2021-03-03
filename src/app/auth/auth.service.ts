@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { User } from './user.model';
+import { environment } from '../../environments/environment'
 
 import * as fromApp from '../store/app.reducer';
 import * as AuthActions from './store/auth.actions';
@@ -33,21 +34,7 @@ export class AuthService {
     private store: Store<fromApp.AppState>
   ) { }
 
-  signup(email: string, password: string) {
-    return this.http.post<AuthResponseData>(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBMIiQDqqNxXMfHwy780VstgnWg7-ybAXs`,
-      {
-        email: email,
-        password: password,
-        returnSecureToken: true
 
-      }
-    ).pipe(catchError(this.handleError),
-
-      tap(resData => {
-        this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
-      }));
-  }
 
   private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
@@ -86,19 +73,6 @@ export class AuthService {
     }
   }
 
-  login(email: string, password: string) {
-    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBMIiQDqqNxXMfHwy780VstgnWg7-ybAXs',
-      {
-        email: email,
-        password: password,
-        returnSecureToken: true
-      }
-    ).pipe(catchError(this.handleError),
-      tap(resData => {
-        this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
-      }));
-  }
-
   private handleError(errorRes: HttpErrorResponse) {
     let errorMessage = 'An unknown error occured!';
     if (!errorRes.error || !errorRes.error.error) {
@@ -121,7 +95,6 @@ export class AuthService {
   logout() {
     // this.user.next(null);
     this.store.dispatch(new AuthActions.Logout());
-    this.router.navigate(['/auth']);
     localStorage.removeItem('userData');
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);

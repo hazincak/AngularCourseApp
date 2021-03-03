@@ -55,7 +55,7 @@ export class AuthEffects {
     ofType(AuthActions.SIGNUP_START),
     switchMap((signupAction: AuthActions.SignupStart) => {
       return this.http.post<AuthResponseData>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBMIiQDqqNxXMfHwy780VstgnWg7-ybAXs`,
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`,
         {
           email: signupAction.payload.email,
           password: signupAction.payload.password,
@@ -83,7 +83,7 @@ export class AuthEffects {
   authLogin = this.actions$.pipe(
     ofType(AuthActions.LOGIN_START),
     switchMap((authData: AuthActions.LoginStart) => {
-      return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBMIiQDqqNxXMfHwy780VstgnWg7-ybAXs',
+      return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseAPIKey}`,
         {
           email: authData.payload.email,
           password: authData.payload.password,
@@ -107,8 +107,8 @@ export class AuthEffects {
 
   //This effect doesn't dispatch new action
   @Effect({dispatch: false})
-  authSuccess = this.actions$.pipe(
-    ofType(AuthActions.AUTHENTICATE_SUCCESS),
+  authRedirect = this.actions$.pipe(
+    ofType(AuthActions.AUTHENTICATE_SUCCESS, AuthActions.LOGOUT),
     tap(() => {
       this.router.navigate(['/']);
   }));
