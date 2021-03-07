@@ -10,7 +10,7 @@ import * as fromApp from '../store/app.reducer';
 export class RecipeService{
     recipesChanged = new Subject<Recipe[]>();
 
-    private recipes: Recipe[];
+    private recipes: Recipe[] = [];
 
     // private recipes: Recipe[]
     // = [
