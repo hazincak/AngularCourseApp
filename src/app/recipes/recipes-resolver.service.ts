@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 import { Store } from '@ngrx/store';
 import { Actions, ofType }  from '@ngrx/effects';
 import { Recipe } from './recipe.model';
-import { RecipeService } from './recipe.service';
 
 import * as fromApp from '../store/app.reducer';
 import * as RecipesActions from '../recipes/store/recipe.actions';
@@ -15,7 +14,6 @@ export class RecipesResolverService implements Resolve<Recipe[]>{
 
     constructor(
       private store: Store<fromApp.AppState>,
-      private recipesService: RecipeService,
       private actions$: Actions
       ){}
 
